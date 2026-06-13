@@ -52,6 +52,7 @@ def patch_modal_app(args) -> Path:
         'MAX_CONTAINERS = int(os.environ.get("MAX_CONTAINERS", "1"))': f"MAX_CONTAINERS = {args.replicas}",
         'FAST_BOOT = os.environ.get("FAST_BOOT", "true").lower() == "true"': f"FAST_BOOT = {args.fast_boot}",
         'MM_MAX_PIXELS = int(os.environ.get("MM_MAX_PIXELS", str(512 * 28 * 28)))': f"MM_MAX_PIXELS = {args.mm_max_pixels}",
+        'QUANTIZATION = os.environ.get("QUANTIZATION", "")': f'QUANTIZATION = "{args.quantization}"',
     }
     for old, new in replacements.items():
         source = source.replace(old, new)
@@ -142,6 +143,7 @@ def main():
     parser.add_argument("--tp", type=int, default=1)
     parser.add_argument("--replicas", type=int, default=1)
     parser.add_argument("--dtype", default="bfloat16")
+    parser.add_argument("--quantization", default="", help="vLLM quantization method e.g. fp8, bitsandbytes, awq")
     parser.add_argument("--prefix-cache", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--chunked-prefill", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--fast-boot", action=argparse.BooleanOptionalAction, default=True)

@@ -48,6 +48,7 @@ MIN_CONTAINERS = int(os.environ.get("MIN_CONTAINERS", "1"))
 MAX_CONTAINERS = int(os.environ.get("MAX_CONTAINERS", "1"))
 FAST_BOOT = os.environ.get("FAST_BOOT", "true").lower() == "true"
 MM_MAX_PIXELS = int(os.environ.get("MM_MAX_PIXELS", str(512 * 28 * 28)))
+QUANTIZATION = os.environ.get("QUANTIZATION", "")
 
 MINUTES = 60
 VLLM_PORT = 8000
@@ -112,6 +113,9 @@ def serve():
 
     if ENABLE_CHUNKED_PREFILL:
         cmd += ["--enable-chunked-prefill"]
+
+    if QUANTIZATION:
+        cmd += ["--quantization", QUANTIZATION]
 
     print("Starting vLLM:", " ".join(cmd), flush=True)
     subprocess.Popen(cmd)
